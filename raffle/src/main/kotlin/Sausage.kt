@@ -1,25 +1,8 @@
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import java.io.File
-import java.math.BigDecimal
-
-
-/*data class CsvPerson(
-    @CsvProperty("Order Total")
-    val orderTotal: Number,
-    @CsvProperty("Recipient Name")
-    val recipientName: String,
-    @CsvProperty("Recipient Email")
-    val recipientEmail: String,
-)*/
 
 fun main(args: Array<String>) {
     readValidCsv()
-}
-
-fun isNumericToXSausage(toCheck: String): Boolean {
-    return toCheck.toDoubleOrNull() != null
 }
 
 private fun readValidCsv() {
