@@ -9,7 +9,7 @@ fun main(args: Array<String>) {
     // Default paths with fallbacks
     val inputPath = args.firstOrNull()
         ?: listOf(
-            "/Users/artur/proj/kegworthps/raffle/test-items.csv",
+            "/Users/artur/Downloads/items-2025-04-01-2025-05-26.csv",
             "test-items.csv"
         ).firstOrNull { File(it).exists() }
         ?: "test-items.csv"
@@ -32,10 +32,10 @@ fun main(args: Array<String>) {
  */
 fun processRaffleEntries(inputPath: String, outputPath: String) {
     // Configuration
-    val validCategories = setOf("Welcome Event")
+    val validCategories = setOf("Autumn Raffle")
     val validProducts = mapOf(
-        "Welcome event raffle ticket - 3x, $10" to 3,
-        "Welcome event raffle ticket - $5" to 1
+        "Autumn raffle ticket - 3x" to 3,
+        "Autumn raffle ticket - single" to 1
     )
 
     var rowCount = 0
@@ -49,6 +49,8 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
         // Write header row
         val headerRow = listOf(
             "RandomID",
+            "Date",
+            "Time",
             "TransactionID",
             "CustomerName",
             "ProductSales",
@@ -85,6 +87,8 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
                                 val randomId = randomStringByKotlinCollectionRandom()
                                 writer.writeRow(listOf(
                                     randomId,
+                                    entry.date,
+                                    entry.time,
                                     entry.transactionId,
                                     entry.customerName,
                                     entry.productSales.toString(),
@@ -110,7 +114,9 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
 /**
  * Data class to hold extracted CSV entry data
  */
-private data class EntryData(
+data class EntryData(
+    val date: String,
+    val time: String,
     val transactionId: String,
     val customerName: String,
     val categoryName: String,
@@ -124,7 +130,9 @@ private data class EntryData(
 /**
  * Extracts relevant data from a CSV row
  */
-private fun extractEntryData(row: List<String>): EntryData = EntryData(
+fun extractEntryData(row: List<String>): EntryData = EntryData(
+    date = row.getOrNull(0).orEmpty(),
+    time = row.getOrNull(1).orEmpty(),
     transactionId = row.getOrNull(14).orEmpty(),
     customerName = row.getOrNull(23).orEmpty(),
     categoryName = row.getOrNull(3).orEmpty(),
