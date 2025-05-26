@@ -77,7 +77,7 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
                         // Calculate total tickets
                         val totalTickets = (entry.quantity * ticketsPerUnit).toInt()
 
-                        if (totalTickets > 0) {
+                        if (entry.productSales > 0 && totalTickets > 0) {
                             orderCount++
 
                             // Create entry for each ticket

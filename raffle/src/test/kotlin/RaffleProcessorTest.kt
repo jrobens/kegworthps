@@ -164,7 +164,6 @@ class RaffleProcessorTest {
         assertEquals("Artur", ticket[4])
         assertEquals("5.0", ticket[5]) // Check '$' removal and number format
         assertEquals("Cust01", ticket[6])
-        // There is no CustomerRefID data. Header only.
     }
 
     @Test
@@ -563,6 +562,32 @@ class RaffleProcessorTest {
         }
     }
 
+    @Test
+    fun `TC18 refund creates no tickets`() {
+        val row = createInputRow(
+            product = "Autumn raffle ticket - single",
+            quantity = "1",
+            category = "Autumn Raffle",
+            transactionId = "Txn001",
+            customerName = "Artur",
+            customerId = "Cust01",
+            grossSales = "-\$5.00" // negative value is a refunded transaction
+        )
+
+        val inputFile = createInputFile(
+            "input_tc01.csv",
+            row,
+        )
+        val outputFile = tempDir.resolve("output_tc01.csv")
+
+        // Execute the function under test
+        processRaffleEntries(inputFile.absolutePathString(), outputFile.absolutePathString())
+
+        // Verify the output
+        val outputData = readOutputCsv(outputFile)
+        assertEquals(1, outputData.size, "Output should have header + 1 data row")
+        assertEquals(expectedOutputHeader, outputData[0], "Output header mismatch")
+    }
 
     /*
     Refunds don't get subtracted out. Should be 3 tickets.
