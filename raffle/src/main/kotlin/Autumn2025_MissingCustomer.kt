@@ -79,8 +79,7 @@ fun processRaffleEntriesFindMissingCustomers(inputPath: String, outputPath: Stri
                                 entry.transactionId,
                                 entry.customerName,
                                 entry.productSales.toString(),
-                                entry.customerId,
-                                entry.customerRefId
+                                entry.customerId
                             )
                         )
                     }

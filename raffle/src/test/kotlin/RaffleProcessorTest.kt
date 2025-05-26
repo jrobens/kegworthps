@@ -32,7 +32,7 @@ class RaffleProcessorTest {
 
     // Defines the expected header row in the output CSV
     private val expectedOutputHeader = listOf(
-        "RandomID", "Date", "Time", "TransactionID", "CustomerName", "ProductSales", "CustomerID", "CustomerRefID"
+        "RandomID", "Date", "Time", "TransactionID", "CustomerName", "ProductSales", "CustomerID"
     )
 
     // Simplified input header based *only* on indices used by extractEntryData + a few placeholders
@@ -75,8 +75,7 @@ class RaffleProcessorTest {
         grossSales: String = "\$5.00", // Simulate Square format
         transactionId: String = "TxnTest",
         customerId: String = "Cust1",
-        customerName: String = "Test User",
-        customerRefId: String = "Ref1"
+        customerName: String = "Test User"
     ): List<String> {
         val row = MutableList(25) { "DUMMY" } // Need 25 columns to reach index 24
         row[3] = category
@@ -86,7 +85,6 @@ class RaffleProcessorTest {
         row[14] = transactionId
         row[22] = customerId
         row[23] = customerName
-        row[24] = customerRefId
 
         return row
     }
@@ -143,7 +141,6 @@ class RaffleProcessorTest {
             transactionId = "Txn001",
             customerName = "Artur",
             customerId = "Cust01",
-            customerRefId = "Ref001",
             grossSales = "\$5.00"
         )
 
@@ -182,7 +179,6 @@ class RaffleProcessorTest {
                 transactionId = "Txn002",
                 customerName = "Bob",
                 customerId = "Cust02",
-                customerRefId = "Ref002",
                 grossSales = "\$10.00"
             )
         )
@@ -208,7 +204,6 @@ class RaffleProcessorTest {
             assertEquals("Bob", ticket[4])
             assertEquals("10.0", ticket[5])
             assertEquals("Cust02", ticket[6])
-            assertEquals("Ref002", ticket[7])
         }
     }
 
@@ -227,7 +222,6 @@ class RaffleProcessorTest {
                 transactionId = "Txn002",
                 customerName = "Bob",
                 customerId = "Cust02",
-                customerRefId = "Ref002",
                 grossSales = "\$20.00"
             )
         )
@@ -253,7 +247,6 @@ class RaffleProcessorTest {
             assertEquals("Bob", ticket[4])
             assertEquals("20.0", ticket[5])
             assertEquals("Cust02", ticket[6])
-            assertEquals("Ref002", ticket[7])
         }
     }
 
@@ -273,7 +266,6 @@ class RaffleProcessorTest {
                 transactionId = "Txn002",
                 customerName = "Bob",
                 customerId = "Cust02",
-                customerRefId = "Ref002",
                 grossSales = "\$20.00"
             ),
             createInputRow(
@@ -283,7 +275,6 @@ class RaffleProcessorTest {
                 transactionId = "Txn002",
                 customerName = "Bob",
                 customerId = "Cust02",
-                customerRefId = "Ref002",
                 grossSales = "\$5.00"
             ),
         )
@@ -314,7 +305,6 @@ class RaffleProcessorTest {
                 assertEquals("20.0", ticket[5])
             }
             assertEquals("Cust02", ticket[6])
-            assertEquals("Ref002", ticket[7])
         }
     }
 
@@ -330,7 +320,6 @@ class RaffleProcessorTest {
                 transactionId = "Txn002",
                 customerName = "Bob",
                 customerId = "Cust02",
-                customerRefId = "Ref002",
                 grossSales = "\$10.00"
             )
         )
@@ -372,7 +361,6 @@ class RaffleProcessorTest {
                 transactionId = "Txn002",
                 customerName = "Bob",
                 customerId = "Cust02",
-                customerRefId = "Ref002",
                 grossSales = "\$10.00"
             )
         )
@@ -422,7 +410,6 @@ class RaffleProcessorTest {
                 transactionId = "Txn002",
                 customerName = "Bob",
                 customerId = "Cust02",
-                customerRefId = "Ref002",
                 grossSales = "\$20.00"
             ),
             createInputRow(transactionId = "Txn006", category = "Invalid Category"), // Invalid category
@@ -548,7 +535,6 @@ class RaffleProcessorTest {
                 transactionId = "Txn002",
                 customerName = "Bob",
                 customerId = "Cust02",
-                customerRefId = "Ref002",
                 grossSales = "\$10.00"
             )
         )
@@ -574,7 +560,6 @@ class RaffleProcessorTest {
             assertEquals("Bob", ticket[2])
             assertEquals("10.0", ticket[3])
             assertEquals("Cust02", ticket[4])
-            assertEquals("Ref002", ticket[5])
         }
     }
 

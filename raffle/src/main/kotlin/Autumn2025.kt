@@ -54,8 +54,7 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
             "TransactionID",
             "CustomerName",
             "ProductSales",
-            "CustomerID",
-            "CustomerRefID"
+            "CustomerID"
         )
         writer.writeRow(headerRow)
 
@@ -92,8 +91,7 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
                                     entry.transactionId,
                                     entry.customerName,
                                     entry.productSales.toString(),
-                                    entry.customerId,
-                                    entry.customerRefId
+                                    entry.customerId
                                 ))
                             }
                         }
@@ -123,8 +121,7 @@ data class EntryData(
     val productName: String,
     val quantity: Double,
     val productSales: Double,
-    val customerId: String,
-    val customerRefId: String
+    val customerId: String
 )
 
 /**
@@ -140,5 +137,4 @@ fun extractEntryData(row: List<String>): EntryData = EntryData(
     quantity = row.getOrNull(5)?.toDoubleOrNull() ?: 0.0,
     productSales = row.getOrNull(9)?.replace("$", "")?.toDoubleOrNull() ?: 0.0,
     customerId = row.getOrNull(22).orEmpty(),
-    customerRefId = row.getOrNull(24).orEmpty()
 )
