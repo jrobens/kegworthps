@@ -41,6 +41,7 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
     var rowCount = 0
     var orderCount = 0
     var ticketCount = 0
+    val cancelledPayments: MutableSet<String> = mutableSetOf()
 
     // Ensure the output directory exists
     File(outputPath).parentFile?.mkdirs()
@@ -54,7 +55,8 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
             "TransactionID",
             "CustomerName",
             "ProductSales",
-            "CustomerID"
+            "CustomerID",
+            "PaymentID",
         )
         writer.writeRow(headerRow)
 
@@ -77,7 +79,10 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
                         // Calculate total tickets
                         val totalTickets = (entry.quantity * ticketsPerUnit).toInt()
 
-                        if (entry.productSales > 0 && totalTickets > 0) {
+                        if (entry.productSales < 0)
+                            cancelledPayments.add(entry.paymentId)
+
+                        if (!cancelledPayments.contains(entry.paymentId) && totalTickets > 0) {
                             orderCount++
 
                             // Create entry for each ticket
@@ -91,7 +96,8 @@ fun processRaffleEntries(inputPath: String, outputPath: String) {
                                     entry.transactionId,
                                     entry.customerName,
                                     entry.productSales.toString(),
-                                    entry.customerId
+                                    entry.customerId,
+                                    entry.paymentId,
                                 ))
                             }
                         }
@@ -121,6 +127,7 @@ data class EntryData(
     val productName: String,
     val quantity: Double,
     val productSales: Double,
+    val paymentId: String,
     val customerId: String
 )
 
@@ -136,5 +143,6 @@ fun extractEntryData(row: List<String>): EntryData = EntryData(
     productName = row.getOrNull(4).orEmpty(),
     quantity = row.getOrNull(5)?.toDoubleOrNull() ?: 0.0,
     productSales = row.getOrNull(9)?.replace("$", "")?.toDoubleOrNull() ?: 0.0,
+    paymentId = row.getOrNull(15).orEmpty(),
     customerId = row.getOrNull(22).orEmpty(),
 )

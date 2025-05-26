@@ -52,8 +52,7 @@ fun processRaffleEntriesFindMissingCustomers(inputPath: String, outputPath: Stri
             "TransactionID",
             "CustomerName",
             "ProductSales",
-            "CustomerID",
-            "CustomerRefID"
+            "CustomerID"
         )
         writer.writeRow(headerRow)
 

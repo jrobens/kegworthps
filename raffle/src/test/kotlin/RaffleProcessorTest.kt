@@ -1,6 +1,5 @@
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows // For checking exceptions
 import org.junit.jupiter.api.io.TempDir
@@ -32,7 +31,7 @@ class RaffleProcessorTest {
 
     // Defines the expected header row in the output CSV
     private val expectedOutputHeader = listOf(
-        "RandomID", "Date", "Time", "TransactionID", "CustomerName", "ProductSales", "CustomerID"
+        "RandomID", "Date", "Time", "TransactionID", "CustomerName", "ProductSales", "CustomerID", "PaymentID"
     )
 
     // Simplified input header based *only* on indices used by extractEntryData + a few placeholders
@@ -53,7 +52,7 @@ class RaffleProcessorTest {
             "H12",
             "H13",
             "Transaction ID",
-            "H15",
+            "Payment ID",
             "H16",
             "H17",
             "H18",
@@ -75,6 +74,7 @@ class RaffleProcessorTest {
         grossSales: String = "\$5.00", // Simulate Square format
         transactionId: String = "TxnTest",
         customerId: String = "Cust1",
+        paymentId: String = "PaymentId1",
         customerName: String = "Test User"
     ): List<String> {
         val row = MutableList(25) { "DUMMY" } // Need 25 columns to reach index 24
@@ -83,6 +83,7 @@ class RaffleProcessorTest {
         row[5] = quantity
         row[9] = grossSales
         row[14] = transactionId
+        row[15] = paymentId
         row[22] = customerId
         row[23] = customerName
 
@@ -141,6 +142,7 @@ class RaffleProcessorTest {
             transactionId = "Txn001",
             customerName = "Artur",
             customerId = "Cust01",
+            paymentId = "PayId01",
             grossSales = "\$5.00"
         )
 
@@ -164,6 +166,7 @@ class RaffleProcessorTest {
         assertEquals("Artur", ticket[4])
         assertEquals("5.0", ticket[5]) // Check '$' removal and number format
         assertEquals("Cust01", ticket[6])
+        assertEquals("PayId01", ticket[7])
     }
 
     @Test
@@ -564,28 +567,32 @@ class RaffleProcessorTest {
 
     @Test
     fun `TC18 refund creates no tickets`() {
-        val row = createInputRow(
-            product = "Autumn raffle ticket - single",
-            quantity = "1",
-            category = "Autumn Raffle",
-            transactionId = "Txn001",
-            customerName = "Artur",
-            customerId = "Cust01",
-            grossSales = "-\$5.00" // negative value is a refunded transaction
-        )
-
         val inputFile = createInputFile(
-            "input_tc01.csv",
-            row,
+            "input_tc18.csv",
+            createInputRow (
+                product = "Autumn raffle ticket - single",
+                category = "Autumn Raffle",
+                transactionId = "Txn001",
+                customerName = "Artur",
+                grossSales = "-\$5.00" // negative value is a refunded transaction
+            ),
+            createInputRow(
+                product = "Autumn raffle ticket - single",
+                category = "Autumn Raffle",
+                transactionId = "Txn002",
+                customerName = "Artur",
+                grossSales = "\$5.00"
+            ),
+
         )
-        val outputFile = tempDir.resolve("output_tc01.csv")
+        val outputFile = tempDir.resolve("output_tc18.csv")
 
         // Execute the function under test
         processRaffleEntries(inputFile.absolutePathString(), outputFile.absolutePathString())
 
         // Verify the output
         val outputData = readOutputCsv(outputFile)
-        assertEquals(1, outputData.size, "Output should have header + 1 data row")
+        assertEquals(1, outputData.size, "Output should have header + 0 data rows")
         assertEquals(expectedOutputHeader, outputData[0], "Output header mismatch")
     }
 
