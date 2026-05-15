@@ -16,7 +16,7 @@ Current Square setup:
 - Product: `Autumn raffle ticket - 3x` = 3 tickets
 - Product: `Autumn raffle ticket -7x` = 7 tickets
 
-Before running the draw, check [RaffleProcessor.kt](src/main/kotlin/RaffleProcessor.kt) and confirm the category and product names still exactly match Square.
+Before running the draw, check [RaffleConfig.kt](src/main/kotlin/RaffleConfig.kt). Update `raffleCategories` and `raffleProducts` there if the Square category or product names have changed. The names must exactly match Square.
 
 ### Run tests
 
