@@ -18,6 +18,14 @@ Current Square setup:
 
 Before running the draw, check [RaffleProcessor.kt](src/main/kotlin/RaffleProcessor.kt) and confirm the category and product names still exactly match Square.
 
+### Run tests
+
+From the `raffle` directory:
+
+```bash
+./gradlew test
+```
+
 ### 1. Download the Square report
 
 1. Visit [Square Item Sales Report](https://app.squareup.com/dashboard/sales/reports/item-sales).
