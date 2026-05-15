@@ -209,6 +209,43 @@ class RaffleProcessorTest {
         }
     }
 
+    @Test
+    fun `TC02b process single valid entry for seven tickets`() {
+        val inputFile = createInputFile(
+            "input_tc02b.csv",
+            createInputRow(
+                product = "Autumn raffle ticket -7x",
+                category = "Autumn Raffle",
+                quantity = "1.0",
+                transactionId = "Txn007",
+                customerName = "Charlie",
+                customerId = "Cust07",
+                paymentId = "PayId07",
+                grossSales = "\$20.00"
+            )
+        )
+        val outputFile = tempDir.resolve("output_tc02b.csv")
+
+        processRaffleEntries(inputFile.absolutePathString(), outputFile.absolutePathString())
+
+        val outputData = readOutputCsv(outputFile)
+        assertEquals(8, outputData.size, "Output should have header + 7 data rows")
+        assertEquals(expectedOutputHeader, outputData[0], "Output header mismatch")
+
+        val dataRows = outputData.drop(1)
+        val uniqueIds = dataRows.map { it[0] }.toSet()
+        assertEquals(7, uniqueIds.size, "RandomIDs should be unique for the 7 tickets")
+
+        dataRows.forEach { ticket ->
+            assertFalse(ticket[0].isBlank(), "RandomID should not be blank")
+            assertEquals("Txn007", ticket[3])
+            assertEquals("Charlie", ticket[4])
+            assertEquals("20.0", ticket[5])
+            assertEquals("Cust07", ticket[6])
+            assertEquals("PayId07", ticket[7])
+        }
+    }
+
     /**
      * If you purchase 2x $10 and 1x $5 these products get split onto different lines. The count is 2 and 1.
      */

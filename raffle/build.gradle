@@ -23,7 +23,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("Autumn2025Kt")
+    mainClass.set("RaffleProcessorKt")
 }
 
 test {

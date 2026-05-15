@@ -6,13 +6,11 @@ import java.io.File
  * Processes raffle entries from Square POS export and generates raffle tickets.
  */
 fun main(args: Array<String>) {
-    // Default paths with fallbacks
     val inputPath = args.firstOrNull()
-        ?: listOf(
-            "/Users/artur/Downloads/items-2025-04-01-2025-05-26.csv",
-            "test-items.csv"
-        ).firstOrNull { File(it).exists() }
-        ?: "test-items.csv"
+    if (inputPath == null) {
+        println("Usage: ./gradlew run --args=\"<input-csv-path> [output-csv-path]\"")
+        return
+    }
 
     val outputPath = args.getOrNull(1) ?: "missing_customers.csv"
 
@@ -31,13 +29,6 @@ fun main(args: Array<String>) {
  * @param outputPath Path to write the processed entries
  */
 fun processRaffleEntriesFindMissingCustomers(inputPath: String, outputPath: String) {
-    // Configuration
-    val validCategories = setOf("Autumn Raffle")
-    val validProducts = mapOf(
-        "Autumn raffle ticket - 3x" to 3,
-        "Autumn raffle ticket - single" to 1
-    )
-
     var rowCount = 0
     var missingCount = 0
 
@@ -66,8 +57,8 @@ fun processRaffleEntriesFindMissingCustomers(inputPath: String, outputPath: Stri
                     val entry = extractEntryData(row)
 
                     // Check if this is a valid raffle entry
-                    if (entry.categoryName in validCategories &&
-                        entry.productName in validProducts.keys &&
+                    if (entry.categoryName in raffleCategories &&
+                        entry.productName in raffleProducts.keys &&
                         entry.customerId.isEmpty()
                     ) {
                         missingCount++
@@ -93,4 +84,3 @@ fun processRaffleEntriesFindMissingCustomers(inputPath: String, outputPath: Stri
     println("- Total rows processed: $rowCount")
     println("- Total missing customers: $missingCount")
 }
-
